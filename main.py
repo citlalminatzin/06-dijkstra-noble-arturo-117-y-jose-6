@@ -176,8 +176,8 @@ def ejercicio_3c():
 
 def create_adjacency_matrix() -> list[list[float]]:
     """
-    Crea la matriz de adyacencia para la Gráfica 4 basada en los datos proporcionados.
-    Se resta 1 a cada nodo para ajustar al indexado de Python (0-11).
+    Crea la matriz de adyacencia para la gráfica 4 basada en los datos de distances.csv. 
+    Se resta 1 a cada nodo para ajustar al indexado.
     """
     n = 12
     # Inicializamos la matriz de costos MD con ceros [cite: 63, 73]
