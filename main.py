@@ -107,6 +107,41 @@ def minimal_distance(M: list[list[float]], origin: int, destination: int) -> flo
     # Devolvemos la distancia específica al nodo destino
     return distancias[destination]
 
+def camino_optimo(M: list[list[float]], origin: int, destination: int) -> list[int]:
+    """
+    Utiliza el algoritmo de Dijkstra para encontrar la secuencia de vértices
+    que conforman el camino más corto entre un origen y un destino.
+    """
+    # Ejecutamos tu función Dijkstra
+    resultados = dijkstra(M, origin)
+    
+    # Extraemos el vector de distancias (D) y el de predecesores (P)
+    D = resultados[0]
+    P = resultados[1]
+    
+    # Si la distancia al destino es infinito, significa que es inalcanzable
+    if D[destination] == inf:
+        return [] # Retornamos una lista vacía indicando que no hay ruta
+        
+    ruta = []
+    nodo_actual = destination
+    
+    # Rastrear hacia atrás usando el arreglo de predecesores P
+    while nodo_actual != -1:
+        ruta.append(int(nodo_actual))
+        
+        # Si llegamos al origen, terminamos de rastrear
+        if nodo_actual == origin:
+            break
+            
+        # Nos movemos al nodo que nos trajo a este
+        nodo_actual = P[int(nodo_actual)]
+        
+    # Como rastreamos del destino al origen, invertimos la lista
+    ruta.reverse()
+    
+    return ruta
+    
 def ejercicio_1():
     """
     Regresa las distancias mínimas del
@@ -121,6 +156,24 @@ def ejercicio_1():
     MD[2,1] = 3
     
     return dijkstra(MD, 0)
+
+def prueba_ejercicio_2():
+    n = 4
+    MD = zeros((n, n))
+    MD[0,1] = 9
+    MD[3,2] = 2
+    MD[0,3] = 6
+    MD[1,3] = 1
+    MD[2,1] = 3
+    
+    origen = 0
+    destino = 2
+    
+    distancia = dijkstra(MD, origen)[0][destino]
+    ruta = camino_optimo(MD, origen, destino)
+    
+    print(f"Distancia mínima de {origen} a {destino}: {distancia}")
+    print(f"Camino óptimo: {ruta}")
 
 def ejercicio_3a():
     """
