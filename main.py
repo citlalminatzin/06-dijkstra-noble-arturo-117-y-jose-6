@@ -1,3 +1,4 @@
+import networkx as nx
 import matplotlib.pyplot as plt
 from numpy import zeros
 from math import inf
@@ -141,7 +142,9 @@ def camino_optimo(M: list[list[float]], origin: int, destination: int) -> list[i
     ruta.reverse()
     
     return ruta
-    
+
+#------------------ EJERCICIO 1
+
 def ejercicio_1():
     """
     Regresa las distancias mínimas del
@@ -156,6 +159,8 @@ def ejercicio_1():
     MD[2,1] = 3
     
     return dijkstra(MD, 0)
+
+#------------------- EJERCICIO 2
 
 def prueba_ejercicio_2():
     n = 4
@@ -175,57 +180,98 @@ def prueba_ejercicio_2():
     print(f"Distancia mínima de {origen} a {destino}: {distancia}")
     print(f"Camino óptimo: {ruta}")
 
-def ejercicio_3a():
+#------------------ EJERCICIO 3
+
+import numpy as np
+import networkx as nx
+import matplotlib.pyplot as plt
+
+def analizar_grafica(M, origen, es_dirigida, titulo):
     """
-    Regresa las distancias mínimas de todos
-    los vértices entre sí
+    Usa las funciones dijkstra y camino_optimo para calcular el camino más corto y utiliza 
+    NetworkX para estructurar y dibujar la gráfica.
     """
-    n = 8
-    M1 = zeros((n,n))
-
-    M1[0,1] = M1[1,0] = 3
-    M1[1,2] = M1[2,1] = 1
-    M1[0,3] = M1[3,0] = 2
-    M1[3,2] = M1[2,3] = 3
-    M1[1,4] = M1[4,1] = 4
-    M1[2,5] = M1[5,2] = 2
-    M1[2,6] = M1[6,2] = 2
-    M1[3,6] = M1[6,3] = 4
-    M1[4,7] = M1[7,4] = 6
-    M1[5,7] = M1[7,5] = 4
-    M1[5,6] = M1[6,5] = 3
-    M1[6,7] = M1[7,6] = 5
+    print(f"\n{'-'*15} {titulo} {'-'*15}")
     
-    distancias = [dijkstra(M1, i) for i in range(n)]
-    return distancias
-
-def ejercicio_3b():
-    n = 4
-    M2 = zeros((n,n))
-
-    M2[0,1] = 9
-    M2[3,2] = 2
-    M2[0,3] = 6
-    M2[1,3] = 1
-    M2[2,1] = 3
-
-    distancias = [dijkstra(M2, i) for i in range(n)]
-    return distancias
+    # 1. Convertimos la matriz numpy a lista de listas para compatibilidad con tus funciones
+    M_lista = M.tolist()
     
-def ejercicio_3c():
-    n = 4
-    M3 = zeros((n,n))
+    # 2. Calculamos los resultados con tu algoritmo de Dijkstra
+    distancias, predecesores = dijkstra(M_lista, origen)
+    
+    print(f"Resultados desde el nodo origen {origen}:")
+    for destino in range(len(M_lista)):
+        if distancias[destino] != float('inf'):
+            ruta = camino_optimo(M_lista, origen, destino)
+            print(f"  A nodo {destino} -> Distancia: {distancias[destino]} | Ruta: {ruta}")
+        else:
+            print(f"  A nodo {destino} -> Inalcanzable")
+            
+    # 3. Construimos el objeto NetworkX
+    # nx.from_numpy_array detecta automáticamente los pesos y descarta los ceros
+    if es_dirigida:
+        G = nx.from_numpy_array(M, create_using=nx.DiGraph)
+    else:
+        G = nx.from_numpy_array(M, create_using=nx.Graph)
+        
+    # 4. Dibujamos la gráfica
+    plt.figure(figsize=(7, 5))
+    plt.title(f"{titulo} - Camino más corto desde nodo {origen}")
+    
+    # spring_layout organiza los nodos de forma atractiva
+    pos = nx.spring_layout(G, seed=42) 
+    
+    # Dibujamos los nodos y aristas
+    nx.draw(G, pos, with_labels=True, node_color='#A0CBE2', 
+            node_size=600, font_weight='bold', font_color='black', 
+            edge_color='gray', arrows=es_dirigida)
+    
+    # Añadimos las etiquetas de peso a las aristas
+    pesos = nx.get_edge_attributes(G, 'weight')
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=pesos, font_color='red')
+    
+    plt.show()
 
-    M3[0,1] = 4
-    M3[0,2] = 8
-    M3[0,3] = 16
-    M3[1,2] = 5
-    M3[1,3] = 11
-    M3[2,3] = 6
+# --- DEFINICIÓN DE LAS MATRICES ---
 
-    distancias = [dijkstra(M3, i) for i in range(n)]
-    return distancias
-    ...
+# Gráfica 1 (No dirigida, 8x8) [cite: 103, 107]
+M1 = np.zeros((8, 8))
+M1[0,1] = M1[1,0] = 3
+M1[1,2] = M1[2,1] = 1
+M1[0,3] = M1[3,0] = 2
+M1[3,2] = M1[2,3] = 3
+M1[1,4] = M1[4,1] = 4
+M1[2,5] = M1[5,2] = 2
+M1[2,6] = M1[6,2] = 2
+M1[3,6] = M1[6,3] = 4
+M1[4,7] = M1[7,4] = 6
+M1[5,7] = M1[7,5] = 4
+M1[5,6] = M1[6,5] = 3
+M1[6,7] = M1[7,6] = 5
+
+# Gráfica 2 (Dirigida, 4x4) [cite: 122, 127]
+M2 = np.zeros((4, 4))
+M2[0,1] = 9
+M2[3,2] = 2
+M2[0,3] = 6
+M2[1,3] = 1
+M2[2,1] = 3
+
+# Gráfica 3 (Dirigida, 4x4) [cite: 135, 139]
+M3 = np.zeros((4, 4))
+M3[0,1] = 4
+M3[0,2] = 8
+M3[0,3] = 16
+M3[1,2] = 5
+M3[1,3] = 11
+M3[2,3] = 6
+
+# --- EJECUCIÓN ---
+analizar_grafica(M1, origen=0, es_dirigida=False, titulo="Gráfica 1")
+analizar_grafica(M2, origen=0, es_dirigida=True,  titulo="Gráfica 2")
+analizar_grafica(M3, origen=0, es_dirigida=True,  titulo="Gráfica 3")
+
+#------------------ EJERCICIO 4
 
 def create_adjacency_matrix() -> list[list[float]]:
     """
