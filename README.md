@@ -19,7 +19,7 @@ Aquí escribe qué necesitas que instale para ejecutar tu código:
 - `numpy`
 - `math`
 
-Y dime cómo debería ejecutar tu código y en qué orden. Recuerda que antes de ejecutar tu código leeré tu `README.md`. Por ejemplo la manera en la que propongo que organizes tu código es
+Todo lo necesario para ejecutar el código se encuentra en:
 
 - `main.py`: Contiene el código para graficar cada uno de los cuatro ejercicios
 
