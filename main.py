@@ -97,7 +97,7 @@ def dijkstra(M: list[list[float]], origin: int) -> list[list[float]]:
     return [D, P]
 
 def minimal_distance(M: list[list[float]], origin: int, destination: int) -> float:
-    """Devuelve la distancia mínima entre el origin y destination"""
+    """Devuelve la distancia mínima entre el orien y destinatino """
     # Ejecutamos Dijkstra desde el origen
     resultados = dijkstra(M, origin)
     
