@@ -174,5 +174,44 @@ def ejercicio_3c():
     return distancias
     ...
 
+def create_adjacency_matrix() -> list[list[float]]:
+    """
+    Crea la matriz de adyacencia para la Gráfica 4 basada en los datos proporcionados.
+    Se resta 1 a cada nodo para ajustar al indexado de Python (0-11).
+    """
+    n = 12
+    # Inicializamos la matriz de costos MD con ceros [cite: 63, 73]
+    M = zeros((n, n)).tolist()
+    
+    # Datos proporcionados: origin, destination, weight
+    aristas = [
+        (1,2,9), (1,3,7), (1,4,3), (1,5,2), (2,6,4), (2,7,2), (2,8,1),
+        (3,6,2), (3,7,7), (4,8,11), (5,7,11), (5,8,8), (6,9,6), (6,10,5),
+        (7,9,4), (7,10,3), (8,10,5), (8,11,6), (9,12,4), (10,12,6), (11,6,12)
+    ]
+    
+    for u, v, w in aristas:
+        # Ajuste de nodo 1-12 a índice 0-11
+        M[u-1][v-1] = float(w)
+        
+    return M
+
+def ejercicio_4():
+    """
+  Encuentra la distancia mínima desde el nodo 1 hacia todos los demás y organiza el diagrama para 0-11
+    """
+    matriz = create_adjacency_matrix()
+    # Ejecutamos Dijkstra partiendo del nodo 1 (índice 0) [cite: 101]
+    resultados = dijkstra(matriz, 0)
+    
+    distancias = resultados[0]
+    predecesores = resultados[1]
+    
+    print("Resultados Ejercicio 4 (Desde Nodo 1):")
+    for i in range(len(distancias)):
+        print(f"Al Nodo {i+1}: Distancia = {distancias[i]}, Predecesor = {int(predecesores[i])+1 if predecesores[i] != -1 else 'N/A'}")
+    
+    return resultados
+
 if __name__ == "__main__":
     main()
