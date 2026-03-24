@@ -48,7 +48,7 @@ def dijkstra(M: list[list[float]], origin: int) -> list[list[float]]:
         # Paso 3: Identifica los nodos vecinos disponibles
         # ---
         for v in range(n):
-            # Tu práctica indica que el 0 representa que no existe arista.
+            # La práctica indica que el 0 representa que no existe arista.
             # Comprobamos que haya conexión (M[u][v] > 0) y que el vecino no sea permanente
             if M[u][v] > 0 and not permanentes[v]:
                 
@@ -73,7 +73,7 @@ def minimal_distance(M: list[list[float]], origin: int, destination: int) -> flo
     # Extraemos el vector de distancias (D está en el índice 0)
     distancias = resultados[0]
     
-    # Devolvemos la distancia específica al nodo destino
+    # Devuelve la distancia específica al nodo destino
     return distancias[destination]
 
 def camino_optimo(M: list[list[float]], origin: int, destination: int) -> list[int]:
@@ -84,7 +84,7 @@ def camino_optimo(M: list[list[float]], origin: int, destination: int) -> list[i
     # Ejecutamos tu función Dijkstra
     resultados = dijkstra(M, origin)
     
-    # Extraemos el vector de distancias (D) y el de predecesores (P)
+    # Extrae el vector de distancias (D) y el de predecesores (P)
     D = resultados[0]
     P = resultados[1]
     
@@ -103,7 +103,7 @@ def camino_optimo(M: list[list[float]], origin: int, destination: int) -> list[i
         if nodo_actual == origin:
             break
             
-        # Nos movemos al nodo que nos trajo a este
+        # Movemos al nodo que nos trajo a este
         nodo_actual = P[int(nodo_actual)]
         
     # Como rastreamos del destino al origen, invertimos la lista
@@ -256,7 +256,7 @@ with open('data/distances.csv', mode='r') as file:
         destino = int(row[1]) - 1
         peso = float(row[2])
         
-        # Como es una gráfica dirigida (las flechas indican el sentido), 
+        # Como es una gráfica dirigida,las flechas indican el sentido, 
         # solo asignamos el peso en la dirección origen -> destino
         M4[origen, destino] = peso
 
