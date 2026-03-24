@@ -18,6 +18,7 @@ Aquí escribe qué necesitas que instale para ejecutar tu código:
 - `matplotlib`
 - `numpy`
 - `math`
+- `networkx`
 
 Todo lo necesario para ejecutar el código se encuentra en:
 
