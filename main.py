@@ -2,40 +2,8 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from numpy import zeros
 from math import inf
+import csv
 
-def create_adjacency_matrix() -> list[list[float]]:
-    """
-    Crea una matriz de adyacencia para el Ejercicio 4.
-    Los nodos del 1 al 12 en el diagrama se mapearán a los índices del 0 al 11.
-    """
-    n = 12
-    # Inicializamos con ceros usando numpy y lo convertimos a lista de listas
-    M = zeros((n, n)).tolist()
-    
-    # Registramos los pesos de las aristas según las flechas de la Gráfica 4
-    # Formato: M[origen][destino] = peso
-    M[0][1] = 9.0   # 1 -> 2
-    M[0][2] = 7.0   # 1 -> 3
-    M[0][3] = 3.0   # 1 -> 4
-    M[0][4] = 2.0   # 1 -> 5
-    M[1][5] = 4.0   # 2 -> 6
-    M[2][5] = 2.0   # 3 -> 6
-    M[2][7] = 1.0   # 3 -> 8
-    M[3][7] = 11.0  # 4 -> 8
-    M[3][6] = 8.0   # 4 -> 7
-    M[4][6] = 11.0  # 5 -> 7
-    M[5][8] = 6.0   # 6 -> 9
-    M[5][9] = 5.0   # 6 -> 10
-    M[6][1] = 7.0   # 7 -> 2 (Note: the arrow clearly points from 7 to 2)
-    M[6][7] = 2.0   # 7 -> 8
-    M[6][9] = 3.0   # 7 -> 10
-    M[7][9] = 4.0   # 8 -> 10
-    M[7][10] = 6.0  # 8 -> 11
-    M[8][11] = 4.0  # 9 -> 12
-    M[9][11] = 6.0  # 10 -> 12
-    M[10][11] = 6.0 # 11 -> 12
-    
-    return M
 
 def dijkstra(M: list[list[float]], origin: int) -> list[list[float]]:
     """
@@ -273,44 +241,33 @@ analizar_grafica(M3, origen=0, es_dirigida=True,  titulo="Gráfica 3")
 
 #------------------ EJERCICIO 4
 
-def create_adjacency_matrix() -> list[list[float]]:
-    """
-    Crea la matriz de adyacencia para la gráfica 4 basada en los datos de distances.csv. 
-    Se resta 1 a cada nodo para ajustar al indexado.
-    """
-    n = 12
-    # Inicializamos la matriz de costos MD con ceros [cite: 63, 73]
-    M = zeros((n, n)).tolist()
-    
-    # Datos proporcionados: origin, destination, weight
-    aristas = [
-        (1,2,9), (1,3,7), (1,4,3), (1,5,2), (2,6,4), (2,7,2), (2,8,1),
-        (3,6,2), (3,7,7), (4,8,11), (5,7,11), (5,8,8), (6,9,6), (6,10,5),
-        (7,9,4), (7,10,3), (8,10,5), (8,11,6), (9,12,4), (10,12,6), (11,6,12)
-    ]
-    
-    for u, v, w in aristas:
-        # Ajuste de nodo 1-12 a índice 0-11
-        M[u-1][v-1] = float(w)
-        
-    return M
+# 1. Definimos el tamaño de la matriz (12 nodos en total)
+n = 12
+M4 = np.zeros((n, n))
 
-def ejercicio_4():
-    """
-  Encuentra la distancia mínima desde el nodo 1 hacia todos los demás y organiza el diagrama para 0-11
-    """
-    matriz = create_adjacency_matrix()
-    # Ejecutamos Dijkstra partiendo del nodo 1 (índice 0) [cite: 101]
-    resultados = dijkstra(matriz, 0)
+# 2. Leemos el archivo CSV y poblamos la matriz
+with open('data/distances.csv', mode='r') as file:
+    reader = csv.reader(file)
+    next(reader)  # Saltamos la primera fila porque es el encabezado (origin,destination,weight)
     
-    distancias = resultados[0]
-    predecesores = resultados[1]
-    
-    print("Resultados Ejercicio 4 (Desde Nodo 1):")
-    for i in range(len(distancias)):
-        print(f"Al Nodo {i+1}: Distancia = {distancias[i]}, Predecesor = {int(predecesores[i])+1 if predecesores[i] != -1 else 'N/A'}")
-    
-    return resultados
+    for row in reader:
+        # Extraemos los valores y restamos 1 a los nodos para ajustar el índice a 0
+        origen = int(row[0]) - 1
+        destino = int(row[1]) - 1
+        peso = float(row[2])
+        
+        # Como es una gráfica dirigida (las flechas indican el sentido), 
+        # solo asignamos el peso en la dirección origen -> destino
+        M4[origen, destino] = peso
+
+# 3. Imprimimos un pedazo de la matriz para verificar que se armó bien
+print("Matriz de adyacencia M4 (primeras 5 filas/columnas):")
+print(M4[:5, :5])
+print("\n")
+
+# 4. Usamos la función integradora del paso anterior para resolver y graficar
+# Nota: El nodo inicial real es el 1, que corresponde al índice 0
+analizar_grafica(M4, origen=0, es_dirigida=True, titulo="Ejercicio 4 - Diagrama Complejo")
 
 if __name__ == "__main__":
     main()
